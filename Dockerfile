@@ -3,13 +3,13 @@
 
 FROM fedora:latest
 
-RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex \
+RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
     DOWNLOAD_URL=`curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | grep -v bin | uniq` && \
-    curl -klo plex.rpm $DOWNLOAD_URL \
-    rpm -ivh plex.rpm \
-    rm -f plex.rpm \
-    mkdir /config \
-    chown plex:plex /config \
+    curl -klo plex.rpm $DOWNLOAD_URL && \
+    rpm -ivh plex.rpm && \
+    rm -f plex.rpm && \
+    mkdir /config && \
+    chown plex:plex /config && \
     dnf clean all
 
 VOLUME /config
