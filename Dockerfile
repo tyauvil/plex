@@ -1,22 +1,20 @@
 # Plex container
 # Version 0.9.12.11.1406-8403350
 
-FROM debian:jessie
+FROM fedora:latest
 
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y curl \
-    && rm -rf /var/lib/apt/lists/* \
+RUN DEBIAN_FRONTEND=noninteractive \
     useradd --system --uid 797 -M --shell /usr/sbin/nologin plex \
     touch /bin/start \
     chmod +x /bin/start \
-    DOWNLOAD_URL=`curl -Ls https://plex.tv/downloads | grep -o '[^"'"'"']*amd64.deb' | grep -v binaries` && \
-    echo $DOWNLOAD_URL && \
-    curl -L $DOWNLOAD_URL -o plexmediaserver.deb \
+    DOWNLOAD_URL=`wget -qO- https://plex.tv/downloads | grep -o '[^"'"'"']*amd64.deb' | grep -v binaries` && \
+    wget -O plexmediaserver.deb $DOWNLOAD_URL \
     dpkg -i plexmediaserver.deb \
     rm -f plexmediaserver.deb \
     rm -f /bin/start \
     mkdir /config \
-    chown plex:plex /config
+    chown plex:plex /config \
+    apt-get autoclean
 
 VOLUME /config
 VOLUME /media
