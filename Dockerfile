@@ -3,18 +3,14 @@
 
 FROM fedora:latest
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    useradd --system --uid 797 -M --shell /usr/sbin/nologin plex \
-    touch /bin/start \
-    chmod +x /bin/start \
-    DOWNLOAD_URL=`wget -qO- https://plex.tv/downloads | grep -o '[^"'"'"']*amd64.deb' | grep -v binaries` && \
-    wget -O plexmediaserver.deb $DOWNLOAD_URL \
-    dpkg -i plexmediaserver.deb \
-    rm -f plexmediaserver.deb \
-    rm -f /bin/start \
+RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex \
+    DOWNLOAD_URL=`curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | grep -v bin | uniq` && \
+    curl -klo plex.rpm $DOWNLOAD_URL \
+    rpm -ivh plex.rpm \
+    rm -f plex.rpm \
     mkdir /config \
     chown plex:plex /config \
-    apt-get autoclean
+    dnf clean all
 
 VOLUME /config
 VOLUME /media
