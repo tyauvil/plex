@@ -1,11 +1,8 @@
-# Plex container
-# Version 0.9.12.11.1406-8403350
-
 FROM fedora:latest
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    DOWNLOAD_URL=`curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | grep -v bin | uniq` && \
-    curl -klo plex.rpm $DOWNLOAD_URL && \
+    DOWNLOAD_URL=`curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | uniq` && \
+    curl -sklo plex.rpm $DOWNLOAD_URL && \
     rpm -ivh plex.rpm && \
     rm -f plex.rpm && \
     mkdir /config && \
