@@ -1,8 +1,7 @@
 FROM fedora:latest
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    DOWNLOAD_URL=`curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | uniq` && \
-    rpm -ivh $DOWNLOAD_URL && \
+    rpm -ivh `curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | uniq` && \
     mkdir /config && \
     chown plex:plex /config && \
     dnf clean all

@@ -11,7 +11,8 @@ ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker pull tyauvil/plex:latest
 ExecStart=/usr/bin/docker run --rm --net="host" --name %n -v /var/local/plex:/config -v /var/share/media:/media tyauvil/plex:latest
 ExecStop=-/usr/bin/docker stop %n
-ExecStop=-/usr/bin/docker rm %n
+ExecReload=-/usr/bin/docker stop %n
+ExecReload=-/usr/bin/docker start %n
 
 [Install]
 WantedBy=multi-user.target
