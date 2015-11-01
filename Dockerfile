@@ -1,7 +1,9 @@
 FROM fedora:22
 
+ENV plexrpm='https://downloads.plex.tv/plex-media-server/0.9.12.18.1520-6833552/plexmediaserver-0.9.12.18.1520-6833552.x86_64.rpm'
+
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    rpm -ivh 'https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=redhat' && \
+    rpm -ivh $plexrpm && \
     mkdir /config && \
     chown plex:plex /config && \
     dnf clean all
