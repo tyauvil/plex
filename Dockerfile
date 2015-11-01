@@ -1,7 +1,7 @@
-FROM fedora:latest
+FROM fedora:22
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    rpm -ivh `curl -skl https://plex.tv/downloads | grep -o '[^"'"'"']*.x86_64.rpm' | uniq` && \
+    rpm -ivh 'https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=redhat' && \
     mkdir /config && \
     chown plex:plex /config && \
     dnf clean all
