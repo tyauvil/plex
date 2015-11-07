@@ -1,6 +1,9 @@
-FROM fedora:22
+# Version 0.9.12.19.1537-f38ac80 
+FROM fedora:23
 
-ENV plexrpm='https://downloads.plex.tv/plex-media-server/0.9.12.18.1520-6833552/plexmediaserver-0.9.12.18.1520-6833552.x86_64.rpm'
+MAINTAINER Ty Auvil https://github.com/tyauvil
+
+ENV plexrpm='https://downloads.plex.tv/plex-media-server/0.9.12.19.1537-f38ac80/plexmediaserver-0.9.12.19.1537-f38ac80.x86_64.rpm'
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
     rpm -ivh $plexrpm && \
