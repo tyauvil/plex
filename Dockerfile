@@ -1,15 +1,14 @@
-# Version 0.9.12.19.1537-f38ac80 
 FROM fedora:23
 
 MAINTAINER Ty Auvil https://github.com/tyauvil
 
-ENV plexrpm='https://downloads.plex.tv/plex-media-server/0.9.12.19.1537-f38ac80/plexmediaserver-0.9.12.19.1537-f38ac80.x86_64.rpm'
+ENV URL='https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=redhat'
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    rpm -ivh $plexrpm && \
+    rpm -ivh $(curl -w "%{url_effective}\n" -I -L -s -S $URL -o /dev/null) && \
     mkdir /config && \
     chown plex:plex /config && \
-    dnf clean all
+    dnf clean all && rm -rf /tmp/*
 
 VOLUME /config
 VOLUME /media
