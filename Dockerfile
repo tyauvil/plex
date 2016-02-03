@@ -5,6 +5,7 @@ MAINTAINER Ty Auvil https://github.com/tyauvil
 ENV URL='https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=redhat'
 
 RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
+    dnf install -y python && \
     rpm -ivh $(curl -w "%{url_effective}\n" -I -L -s -S $URL -o /dev/null) && \
     mkdir /config && \
     chown plex:plex /config && \
