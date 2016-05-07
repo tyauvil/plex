@@ -1,15 +1,19 @@
-FROM fedora:23
+FROM ubuntu:xenial
 
 MAINTAINER Ty Auvil https://github.com/tyauvil
 
-ENV URL='https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=redhat'
-
-RUN useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
-    dnf install -y python && \
-    rpm -ivh $(curl -w "%{url_effective}\n" -I -L -s -S $URL -o /dev/null) && \
+RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror:\/\/mirrors.ubuntu.com\/mirrors.txt/' /etc/apt/sources.list && \
+    apt-get update && apt-get install -y --no-install-recommends wget && \
+    wget --no-check-certificate "https://plex.tv/downloads/latest/1?channel=8&build=linux-ubuntu-x86_64&distro=ubuntu" -O /tmp/plex.deb && \
+    wget --no-check-certificate "https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64.deb" -O /tmp/dumb-init.deb && \
+    useradd --system --uid 797 -M --shell /usr/sbin/nologin plex && \
+    dpkg -i /tmp/*.deb && \
     mkdir /config && \
     chown plex:plex /config && \
-    dnf clean all && rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    apt-get remove -y wget && \
+    apt-get autoremove -y && \
+    apt-get clean all
 
 VOLUME /config
 VOLUME /media
@@ -19,12 +23,11 @@ USER plex
 EXPOSE 32400
 
 ENV PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS 6
-ENV PLEX_MEDIA_SERVER_MAX_STACK_SIZE 3000
 ENV PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR /config
 ENV PLEX_MEDIA_SERVER_HOME /usr/lib/plexmediaserver
 ENV LD_LIBRARY_PATH /usr/lib/plexmediaserver
 ENV TMPDIR /tmp
 
-WORKDIR /usr/lib/plexmediaserver
-CMD test -f /config/Plex\ Media\ Server/plexmediaserver.pid && rm -f /config/Plex\ Media\ Server/plexmediaserver.pid; \
-    ulimit -s $PLEX_MAX_STACK_SIZE && ./Plex\ Media\ Server
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
