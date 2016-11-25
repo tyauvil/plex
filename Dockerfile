@@ -2,7 +2,7 @@ FROM ubuntu:xenial
 
 MAINTAINER Ty Auvil https://github.com/tyauvil
 
-ENV DUMB_VERSION=1.1.3 \
+ENV DUMB_VERSION=1.2.0 \
     DEBIAN_FRONTEND=noninteractive \
     PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6 \
     PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=/config \
